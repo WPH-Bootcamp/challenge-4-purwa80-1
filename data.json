@@ -1,0 +1,26 @@
+{
+  "students": [
+    {
+      "id": "S001",
+      "name": "PURWANTO",
+      "class": "WPH-REP2",
+      "grades": {
+        "WEB PROGRAMMING": 100
+      }
+    },
+    {
+      "id": "S002",
+      "name": "JOKO BODO",
+      "class": "WPH-REP2",
+      "grades": {
+        "WEB PROGRAMMING": 73
+      }
+    },
+    {
+      "id": "S004",
+      "name": "DARMAWAN",
+      "class": "WPH-REP2",
+      "grades": {}
+    }
+  ]
+}
