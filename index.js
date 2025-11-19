@@ -47,9 +47,26 @@ function displayMenu() {
  * - Tampilkan pesan sukses/gagal
  */
 function addNewStudent() {
-  // Implementasi di sini
   console.log('\n--- Tambah Siswa Baru ---');
-  // TODO: Lengkapi implementasi
+
+  const id = readlineSync.question('ID siswa: ').trim();
+  const name = readlineSync.question('Nama siswa: ').trim();
+  const kelas = readlineSync.question('Kelas (misal 10A): ').trim();
+
+  if (!id || !name) {
+    console.log('ID dan Nama wajib diisi.');
+    return;
+  }
+
+  if (manager.findStudent(id)) {
+    console.log('ID sudah digunakan.');
+    return;
+  }
+
+  const student = new Student(id, name, kelas);
+  manager.addStudent(student);
+
+  console.log('Siswa berhasil ditambahkan.');
 }
 
 /**
@@ -59,9 +76,8 @@ function addNewStudent() {
  * - Jika tidak ada siswa, tampilkan pesan
  */
 function viewAllStudents() {
-  // Implementasi di sini
   console.log('\n--- Daftar Semua Siswa ---');
-  // TODO: Lengkapi implementasi
+  manager.displayAllStudents();
 }
 
 /**
@@ -72,9 +88,16 @@ function viewAllStudents() {
  * - Tampilkan info siswa jika ditemukan
  */
 function searchStudent() {
-  // Implementasi di sini
   console.log('\n--- Cari Siswa ---');
-  // TODO: Lengkapi implementasi
+  const id = readlineSync.question('Masukkan ID: ').trim();
+
+  const s = manager.findStudent(id);
+  if (!s) {
+    console.log('Siswa tidak ditemukan.');
+    return;
+  }
+
+  s.displayInfo();
 }
 
 /**
@@ -86,9 +109,26 @@ function searchStudent() {
  * - Update menggunakan manager
  */
 function updateStudent() {
-  // Implementasi di sini
   console.log('\n--- Update Data Siswa ---');
-  // TODO: Lengkapi implementasi
+  const id = readlineSync.question('Masukkan ID: ').trim();
+
+  const s = manager.findStudent(id);
+  if (!s) {
+    console.log('Siswa tidak ditemukan.');
+    return;
+  }
+
+  s.displayInfo();
+
+  const newName = readlineSync.question('Nama baru (enter untuk skip): ').trim();
+  const newClass = readlineSync.question('Kelas baru (enter untuk skip): ').trim();
+
+  manager.updateStudent(id, {
+    name: newName || undefined,
+    class: newClass || undefined
+  });
+
+  console.log('Data siswa berhasil diupdate.');
 }
 
 /**
@@ -99,9 +139,22 @@ function updateStudent() {
  * - Hapus menggunakan manager
  */
 function deleteStudent() {
-  // Implementasi di sini
   console.log('\n--- Hapus Siswa ---');
-  // TODO: Lengkapi implementasi
+  const id = readlineSync.question('Masukkan ID: ').trim();
+
+  const s = manager.findStudent(id);
+  if (!s) {
+    console.log('Siswa tidak ditemukan.');
+    return;
+  }
+
+  const confirm = readlineSync.question('Yakin hapus siswa? (y/n): ').toLowerCase();
+  if (confirm === 'y') {
+    manager.removeStudent(id);
+    console.log('Siswa berhasil dihapus.');
+  } else {
+    console.log('Dibatalkan.');
+  }
 }
 
 /**
@@ -113,9 +166,24 @@ function deleteStudent() {
  * - Tambahkan nilai menggunakan method addGrade
  */
 function addGradeToStudent() {
-  // Implementasi di sini
   console.log('\n--- Tambah Nilai Siswa ---');
-  // TODO: Lengkapi implementasi
+  const id = readlineSync.question('Masukkan ID: ').trim();
+
+  const s = manager.findStudent(id);
+  if (!s) {
+    console.log('Siswa tidak ditemukan.');
+    return;
+  }
+
+  const subject = readlineSync.question('Mata pelajaran: ');
+  const score = Number(readlineSync.question('Nilai (0-100): '));
+
+  try {
+    s.addGrade(subject, score);
+    console.log('Nilai berhasil ditambahkan.');
+  } catch (err) {
+    console.log('Error:', err.message);
+  }
 }
 
 /**
@@ -125,9 +193,18 @@ function addGradeToStudent() {
  * - Tampilkan informasi siswa
  */
 function viewTopStudents() {
-  // Implementasi di sini
   console.log('\n--- Top 3 Siswa ---');
-  // TODO: Lengkapi implementasi
+
+  const top = manager.getTopStudents(3);
+  if (top.length === 0) {
+    console.log('Belum ada data.');
+    return;
+  }
+
+  top.forEach((s, i) => {
+    console.log(`\n#${i + 1}`);
+    s.displayInfo();
+  });
 }
 
 /**
@@ -141,18 +218,25 @@ function viewTopStudents() {
 function main() {
   console.log('Selamat datang di Sistem Manajemen Nilai Siswa!');
   
-  // TODO: Implementasikan loop utama program
   let running = true;
   
   while (running) {
-    // Tampilkan menu
-    // Baca pilihan user
-    // Jalankan action sesuai pilihan
-    // TODO: Lengkapi implementasi
-    
-    // Hint: gunakan switch-case untuk handle berbagai pilihan
+    displayMenu();
+    const choice = readlineSync.question('Pilih menu (1-8): ');
+
+    switch (choice) {
+      case '1': addNewStudent(); break;
+      case '2': viewAllStudents(); break;
+      case '3': searchStudent(); break;
+      case '4': updateStudent(); break;
+      case '5': deleteStudent(); break;
+      case '6': addGradeToStudent(); break;
+      case '7': viewTopStudents(); break;
+      case '8': running = false; break;
+      default: console.log('Pilihan tidak valid.');
+    }
   }
-  
+
   console.log('\nTerima kasih telah menggunakan aplikasi ini!');
 }
 
